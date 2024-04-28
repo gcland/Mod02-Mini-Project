@@ -1,18 +1,4 @@
-tasks = ['clean', 'mop (Complete)']
-
-def add_task():
-    while True:
-        print(tasks)
-        try:
-            add_item = input("Enter an item to add to the To-Do List: \n >> ")
-        except ValueError:
-            print("Input error. Please try again.")
-        else:
-            break
-
-    tasks.append(add_item + " (Incomplete)")
-    print(f"'{add_item}' added! Task list: ")
-    print(tasks) #remove later (will be performed by user when using using the 'view' input.)
+tasks = []
 
 def view_tasks():
     if tasks == []:
@@ -24,79 +10,130 @@ def view_tasks():
             print(str(i) + ". " + task)
             i+=1
 
-def mark_complete(): #incomplete
-    print("To-do list:") 
-    print(tasks)
-    complete = input("Which item from the to-do list would you like to mark as complete? \n >> ")
-    for task in tasks:
-        if complete.lower() == task.lower():
-            #task if task != complete else task + " (Complete)"
-            print(task)
-            tasks.remove(task)
-            task = (complete + " (Complete)")
-            tasks.insert(complete)
-
-        #else:
-            #print("no")
-    print(tasks)
-    
-def delete_task(): #incomplete, needs debugging
+def add_task():
     while True:
         print(tasks)
         try:
-            delete_item = input("Enter an item to delete from the To-Do List: \n >> ")
+            add_item = input("Enter an item to add to the To-Do List: \n >> ")
         except ValueError:
             print("Input error. Please try again.")
+        if add_item.lower() + " (Incomplete)" in tasks:
+                print(f"{add_item} is already in the to-do list!")
         else:
+                tasks.append(add_item + " (Incomplete)")
+                print(f"'{add_item}' added! Task list: ")
+        view_tasks()
+        while True:
+            again = input("Would you like to add more items to the to-do list? Yes or no? ")
+            if again.lower() == "no":
+                break
+            elif again.lower() == "yes":
+                break
+            else:
+                print(f"{again.upper()} not recognized. Please try again.")
+        if again.lower() == "no":
             break
-    if delete_item not in tasks:
-        print("nope")   
-    try:
-        tasks.remove(delete_item + " (Complete)")
-        print(f"'{delete_item}' deleted! Task list: ")
-    except ValueError:
+
+def mark_complete(): #fix function to congratulate user on completing all tasks
+    y = tasks.count(" (Complete)")
+    view_tasks()
+    while True:
+        if tasks == []:
+            break
+        i = 0
+        view_tasks()
+        n = input("Which item from the to-do list would you like to mark as complete? \n >> ")
+        inc = n + " (Incomplete)"
+        com = n + " (Complete)"
+        if com in tasks:
+            print(f"{n} is already complete!")
+        elif inc not in tasks:
+            print(f"{n} is not in the to-do list.")
+        for task in tasks:
+            i+=1
+            if inc == task:
+                print(com)
+                tasks.pop(i-1)
+                tasks.insert(i-1, com)
+                y+=1
+                break
+        z = len(tasks)
+        if y == z:
+            print("\nYour task list is fully completed! Congratulations!")
+            view_tasks()
+            break
+        while True:
+            again = input("Would you like to mark more items complete on the to-do list? Yes or no? ")
+            if again.lower() == "no":
+                break
+            elif again.lower() == "yes":
+                break
+            else:
+                print(f"{again.upper()} not recognized. Please try again.")
+        if again.lower() == "no":
+            break
+        
+def delete_task(): 
+    while True:
+        view_tasks()
+        if tasks == []:
+            break
+        delete_item = input("Enter an item to delete from the To-Do List: \n >> ")
+        del_comp = delete_item + " (Complete)"
+        del_incomp = delete_item + " (Incomplete)"
+
+        if del_comp in tasks:
+            tasks.remove(del_comp)
+            print(f"'{delete_item}' deleted!")
+        elif del_incomp not in tasks: 
+            print(f"{delete_item} is not in the to-do list!")  
+        elif del_incomp in tasks:
             while True:
-                try:
-                    give_up = input(f"'{delete_item}' is not complete. Would you like to delete this item anyways? Yes or no? ")
-                except ValueError:
-
-                    if give_up.lower() == "yes":
-                        tasks.remove(delete_item)
-                        break
-                    elif give_up.lower() == "no":
-                        break
-                    else:
-                        print(f"Command not recognized. Please try again.")
-            
-    print(tasks) #remove later (will be performed by user when using using the 'view' input.)
-
+                quitter = input(f"{delete_item} is not complete. Are you sure you want to delete this? Yes or no? ")
+                if quitter.lower() == "no":
+                    break
+                elif quitter.lower() == "yes":
+                    tasks.remove(del_incomp)
+                    print(f"'{delete_item}' deleted!")
+                    break
+                else:
+                    print(f"{quitter.upper()} not recognized. Please try again.")
+        while True:
+            again = input("Would you like to delete more items on the to-do list? Yes or no? ")
+            if again.lower() == "no":
+                break
+            elif again.lower() == "yes":
+                break
+            else:
+                print(f"{again.upper()} not recognized. Please try again.")
+        if again.lower() == "no":
+            break    
 
 while True:
     try:
-        display = input("\n Welcome to the To-Do List Application! \n Menu: \n 1. Add a task \n 2. View tasks \n 3. Mark a task as complete \n 4. Delete a task \n 5. Quit \n Please input from the menu above with a number or action: \n >> ")
-        #if display
- 
+        display = input("\n Welcome to the To-Do List Application! \n Menu: \n 1. Add a task \n 2. View tasks \n 3. Mark a task complete \n 4. Delete a task \n 5. Quit \n Please input from the menu above with a number or action: \n >> ")
+    
     except ValueError:
-        #if display == "1":
-        print("Input must be between 1 - 5. ")
-        #or display.lower() == "Add a task":
-            
-        #else:
-            #print("Input Error. Idiot.")
-    else:
-        if display == "1":
-            add_task()
-        if display == "2":
-            view_tasks()
-        if display == "3":
-            mark_complete()
-        if display == "4":
-            delete_task()
-        if display == "5":
-            print("Thank you for using the To-Do Application! Have a great day!")
+        print("Input not recognized. Please try again.")
+   
+
+    if display == "1" or display.lower() == "add" or display.lower() == "add a task":
+        add_task()
+    elif display == "2" or display.lower() == "view" or display.lower() == "view a task":
+        view_tasks()
+    elif display == "3" or display.lower() == "complete" or display.lower() == "mark complete" or display.lower() == "mark a task complete":
+        mark_complete()
+    elif display == "4" or display.lower() == "delete" or display.lower() == "delete a task":
+        delete_task()
+    elif display == "5" or display.lower() == "quit":
+        print("Thank you for using the To-Do Application! Have a great day!")
+        if tasks == []:
             break
-
-
+        else:
+            view_tasks()
+            break
+    else:
+        print("Input not recognized. Please try again.")
 
 
     
